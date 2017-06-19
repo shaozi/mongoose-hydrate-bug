@@ -1,0 +1,1 @@
+Reproduce issue with `hydrate()` in mongoose.
