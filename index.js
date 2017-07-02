@@ -13,8 +13,9 @@ Project.findOneAndRemove({ name: 'test' }).exec().then(() => {
   var poc = new Poc({ name: 'test', poc: 'poc' })
   poc.save().then((obj) => {
     console.log(`before: ${JSON.stringify(obj, null, 2)}`)
+    obj = obj.toObject()
     obj.type = 'Training'
-    const training = Training.hydrate(obj.toObject())
+    const training = Training.hydrate(obj)
     training.training = 'training'
     delete training.poc
     return training.save()
