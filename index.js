@@ -10,14 +10,16 @@ mongoose.Promise = Promise
 mongoose.connect('mongodb://localhost/test')
 
 Project.findOneAndRemove({ name: 'test' }).exec().then(() => {
-  var poc = new Poc({ name: 'test', poc: 'poc' })
+  var poc = new Poc({ name: 'test', description: "a poc", poc: 'poc' })
   poc.save().then((obj) => {
     console.log(`before: ${JSON.stringify(obj, null, 2)}`)
+    obj = obj.toObject()
     obj.type = 'Training'
-    const training = Training.hydrate(obj.toObject())
-    training.training = 'training'
-    delete training.poc
-    return training.save()
+    delete obj.poc
+    obj.description = "a training converted from a poc"
+    obj.training = 'training'
+    const training = Training.hydrate(obj)
+    return training.save({ validateBeforeSave: true })
   }).then((obj) => {
     console.log(`after: ${JSON.stringify(obj, null, 2)}`)
     mongoose.connection.close()
